@@ -14,10 +14,13 @@ import local
 from google.appengine.api import users, memcache
 from google.appengine.ext.webapp import template, RequestHandler
 
+
+
 class NotFoundException(Exception):
   pass
 
 class Megaera(RequestHandler):
+  HANDLERS_BASE = '/app'
   
   def __init__(self):
     self._response_dict = recursivedefaultdict()
@@ -141,10 +144,10 @@ class Megaera(RequestHandler):
       key=self.cache_key(page),
       namespace="handler-cache")
   
-  def default_template(self, ext="html", base="/app"):
+  def default_template(self, ext="html"):
     """Returns the path for the current page's default template."""
     page = self.page.__file__
-    match = re.compile("%s/([^.]*)" % base).search(page)
+    match = re.compile("%s/([^.]*)" % self.HANDLERS_BASE).search(page)
     if match and match.group(1):
       return "%s.%s" % (match.group(1), ext)
     raise Exception("failed to build default template for %s" % page)
