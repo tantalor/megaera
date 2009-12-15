@@ -41,6 +41,8 @@ class Megaera(RequestHandler):
     
   def get(self, *args):
     """Responds to GET requests from WSGIApplication."""
+    if self.has_param('post'):
+      return self.post(*args)
     # check for trailing slashes
     match = re.compile('^(/.*[^/])/+$').search(self.request.path)
     if match and match.groups(1):
@@ -87,17 +89,20 @@ class Megaera(RequestHandler):
     """Returns if the current user is an admin."""
     return users.is_current_user_admin()
   
+  def has_param(self, param):
+    return len(self.request.get_all(param)) > 0
+  
   def is_json(self):
     """Returns if the current request is for JSON."""
-    return len(self.request.get_all('json')) > 0
+    return self.has_param('json')
   
   def is_yaml(self):
     """Returns if the current request is for YAML."""
-    return len(self.request.get_all('yaml')) > 0
+    return self.has_param('yaml')
   
   def is_atom(self):
     """Returns if the current request is for Atom."""
-    return len(self.request.get_all('atom')) > 0
+    return self.has_param('atom')
   
   def logout_url(self):
     """Returns the logout URL of the current request."""
