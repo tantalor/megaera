@@ -12,6 +12,7 @@ import json
 import local
 
 from google.appengine.api import users, memcache
+from google.appengine.api.datastore_errors import NeedIndexError
 from google.appengine.ext.webapp import template, RequestHandler
 
 
@@ -166,6 +167,8 @@ class Megaera(RequestHandler):
       return method(self, self.response_dict())
     except NotFoundException:
       return self.not_found()
+    except NeedIndexError:
+      return self.not_found(status=503)
     except:
       return self.handle_error()
   
