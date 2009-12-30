@@ -125,6 +125,8 @@ class Megaera(RequestHandler):
   
   def cached(self):
     """Returns if the current page is cached and updates the response dict with the cached values."""
+    if self.has_param('no_cache'):
+      return
     cached = memcache.get(
       key=self.cache_key(),
       namespace="handler-cache")
