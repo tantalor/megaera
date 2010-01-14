@@ -20,7 +20,7 @@ def config(filename='local.yaml', cachekey='local_config'):
     return config
   return dict()
 
-def credentials(key, filename):
+def credentials(key, filename=None):
   local = config(filename)
   if key in local:
     return local[key]
