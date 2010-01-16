@@ -21,7 +21,9 @@ class NotFoundException(Exception):
   pass
 
 class Megaera(RequestHandler):
-  HANDLERS_BASE = '/app'
+  # These constants are used to locate the default templates.
+  HANDLERS_BASE = 'handlers'
+  TEMPLATES_BASE = 'templates'
   
   def __init__(self):
     self._response_dict = recursivedefaultdict()
@@ -204,7 +206,7 @@ class Megaera(RequestHandler):
       return;
     if not path:
       path = self.default_template(ext=base)
-    path = os.path.join(base, path)
+    path = os.path.join(self.TEMPLATES_BASE, path)
     if os.path.exists(path):
       try:
         # the template might find these handy
