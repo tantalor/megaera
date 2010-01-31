@@ -207,7 +207,7 @@ class Megaera(RequestHandler):
     if not path:
       path = self.default_template(ext=base)
     path = os.path.join(self.TEMPLATES_BASE, path)
-    if os.path.exists(path):
+    if self.file_exists(path):
       try:
         # the template might find these handy
         self.response_dict(
@@ -226,6 +226,9 @@ class Megaera(RequestHandler):
       message = "Template not found: %s" % path
       logging.critical(message)
       self.response.out.write(message)
+  
+  def file_exists(self, path):
+    return os.path.exists(path)
   
   def redirect(self, *args):
     """Redirects to the given location (unless in JSON/YAML mode)."""
