@@ -1,6 +1,7 @@
 import unittest
 
-from megaera import megaera
+import megaera
+from megaera.request_handler import MegaeraRequestHandler
 
 from google.appengine.ext.webapp import Request, Response
 
@@ -13,7 +14,7 @@ class MockTemplate:
 
 def mock_handler(file='handlers/mock.py', request='/mock', **response):
   class MockPage: __file__ = file
-  handler = megaera.Megaera.with_page(MockPage())()
+  handler = MegaeraRequestHandler.with_page(MockPage())()
   handler.initialize(Request.blank(request), Response())
   handler.response_dict(**response)
   return handler
@@ -21,12 +22,12 @@ def mock_handler(file='handlers/mock.py', request='/mock', **response):
 
 class TestMegaera(unittest.TestCase):
   def setUp(self):
-    self.mock_template = megaera.template = MockTemplate()
+    self.mock_template = megaera.request_handler.template = MockTemplate()
   
   def test_with_page(self):
     class MockPage: __file__ = ''
     page = MockPage()
-    handler = megaera.Megaera.with_page(page)()
+    handler = MegaeraRequestHandler.with_page(page)()
     self.assertEquals(handler.page, page)
   
   def test_default_template(self):

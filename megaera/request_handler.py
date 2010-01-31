@@ -20,7 +20,7 @@ from google.appengine.ext.webapp import template, RequestHandler
 class NotFoundException(Exception):
   pass
 
-class Megaera(RequestHandler):
+class MegaeraRequestHandler(RequestHandler):
   # These constants are used to locate the default templates.
   HANDLERS_BASE = 'handlers'
   TEMPLATES_BASE = 'templates'

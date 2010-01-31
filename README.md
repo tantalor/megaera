@@ -1,6 +1,6 @@
 # Megaera
 
-**Megaera** is a python module for [Google App Engine](http://code.google.com/appengine/) applications. It offers a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_ called _Megaera_ with additional functionality.
+**Megaera** is a python module for [Google App Engine](http://code.google.com/appengine/) applications. It offers a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_ called _MegaeraRequestHandler_ with additional functionality.
 
 ![Megaera, Tisipone, and Alecto](/dodgeballcannon/megaera/raw/master/megaera.jpg)
 
@@ -8,7 +8,7 @@
 
 The _webapp.RequestHandler_ class lacks several features common to web application frameworks such as automatic rendering of templates and support for alternate output formats (e.g., YAML, JSON).
 
-To solve this, the _Megaera_ class (which bases _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
+To solve this, _MegaeraRequestHandler_ (which bases _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
 
 The basic Google App Engine SDK also omits common tasks such as distinguishing development and production environments and accessing application-specific local configuration.
 
@@ -31,16 +31,16 @@ To get Megaera up and running, first add a route in `app.yaml` from all paths to
     - url: .*
       script: main.py
 
-In your `main.py`, build your _WSGIApplication_ by routing "/" to a _Megaera_ handler with _Megaera.with_page_().
+In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequestHandler_  with __MegaeraRequestHandler.with_page_.
 
     from google.appengine.ext.webapp import WSGIApplication
     from google.appengine.ext.webapp.util import run_wsgi_app
     
-    from megaera import megaera
+    from megaera.request_handler import MegaeraRequestHandler
     
     def application():
       return WSGIApplication([
-        ('/', megaera.Megaera.with_page('handlers/default'))
+        ('/', MegaeraRequestHandler.with_page('handlers/default'))
       ], debug=True)
     
     def main():
@@ -49,7 +49,7 @@ In your `main.py`, build your _WSGIApplication_ by routing "/" to a _Megaera_ ha
     if __name__ == "__main__":
       main()
 
-The `handlers/default.py` handler can respond to GET requests very simply by defining a `get` function which accepts `handler` and `response` arguments. The `handler` is a _Megaera_ (is a _webapp.RequestHandler_). The `response` is a special data structure called a _recursivedefaultdict_.
+The `handlers/default.py` handler can respond to GET requests very simply by defining a `get` function which accepts `handler` and `response` arguments. The `handler` is a _MegaeraRequestHandler_ (a _webapp.RequestHandler_). The `response` is a special data structure called a _recursivedefaultdict_.
 
     def get(handler, response):
       name = handler.request.get('name')
