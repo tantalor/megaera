@@ -72,6 +72,20 @@ The structure of the local configuration is a dictionary. Every value of the dic
 
 The local configuration will automatically be cached in memcached under they key _local_config_.
 
+To load the entire configuration for a given environment, call `local.config()`.
+
+To load a value for a particular key, call `local.config_get(key)`. This will throw a _KeyError_ if the key doesn't exist.
+
+### Example
+
+In this example, the _yahoo_ key has distinct _appId_ values for production and development.
+
+    yahoo:
+      prod:
+        appId: 7d3a4304887748f01a492daa0a70e770
+      dev:
+        appid: 89823f9248a5e9408e63d47179f8a8b3
+
 ## JSON, YAML, Atom
 
 If a request's query parameters contain a `json`, `yaml`, or `atom` key, then the handler's default template will be ignored and the handler's response will be rendered in the desired format.
