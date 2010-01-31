@@ -64,6 +64,24 @@ Finally, `templates/default.html` is a standard django template.
 
 Megaera also automatically exposes `handler` (the request handler) and `is_dev` (a boolean) values to the templates.
 
+## Local Configuration
+
+Megaera will look for an optional local configuration in `local.yaml`.
+
+The structure of the local configuration is a dictionary. Every value of the dictionary may optionally be a dictionary with _prod_ and _dev_ keys. In this case, the _prod_ value will be used in production and the _dev_ value will be used in development.
+
+The local configuration will automatically be cached in memcached under they key _local_config_.
+
+## JSON, YAML, Atom
+
+If a request's query parameters contain a `json`, `yaml`, or `atom` key, then the handler's default template will be ignored and the handler's response will be rendered in the desired format.
+
+For example, the `/?yaml` request will render your default in YAML.
+
+In the case of Atom, instead of rendering the "html" template, Megaera will loook for a template ending with "atom", e.g., "templates/default.atom".
+
+Megaera will recursively sanitize the response. You can (and should) define custom `santize()` methods on your objects which return the data they want to be returned to the client in JSON or YAML cases.
+
 ## Tests
 
 Megaera is packaged with [unit tests](http://docs.python.org/library/unittest.html) in the `test/` directory. 
