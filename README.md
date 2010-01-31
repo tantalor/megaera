@@ -14,7 +14,7 @@ The basic Google App Engine SDK also omits common tasks such as distinguishing d
 
 Megaera solves these problems together by relying on a single `local.yaml` file in the application's root which can store configuration data for the development and production environments. Megaera's `local.config` function then will automatically load the correct configuration data depending on the application's current environment.
 
-## Usage
+## Handling Requests
 
 Suppose you have the following files in your application.
 
@@ -58,9 +58,10 @@ Finally, your handler in `handlers/default.py` can respond to GET requests very 
 
 A _recursivedefaultdict_ is a _[defaultdict](http://docs.python.org/library/collections.html#collections.defaultdict)_ whose keys can be read/written by the dot operator (i.e., _[getattr](http://docs.python.org/reference/datamodel.html#object.__getattr__)_, _[setattr](http://docs.python.org/reference/datamodel.html#object.__setattr__)_) and whose "default" is another _recursivedefaultdict_. The end result is a very simple-to-use datastructure. Megaera's _recursivedefaultdict_ is based on code samples by [Kent S Johnson](http://personalpages.tds.net/~kent37/kk/00013.html).
 
-The final step is to write the template, which is a standard django template.
+Finally, `templates/default.html` is a standard django template.
 
     <p>{{messages.hello}}</p>
+    {% if is_dev %}<p>This is development.</p>{% endif %}
 
 Megaera also automatically exposes `handler` (the request handler) and `is_dev` (a boolean) values to the templates.
 
