@@ -76,11 +76,11 @@ The local configuration will automatically be cached in memcached under they key
 
 If a request's query parameters contain a `json`, `yaml`, or `atom` key, then the handler's default template will be ignored and the handler's response will be rendered in the desired format.
 
-For example, the `/?yaml` request will render your default in YAML.
+For example, the `/?yaml` request will render your default handler in YAML.
 
 In the case of Atom, instead of rendering the "html" template, Megaera will loook for a template ending with "atom", e.g., "templates/default.atom".
 
-Megaera will recursively sanitize the response. You can (and should) define custom `santize()` methods on your objects which return the data they want to be returned to the client in JSON or YAML cases.
+Megaera will recursively sanitize the response in JSON or YAML mode. You can (and should) define `sanitize()` methods on your models to return sanitized data for the client.
 
 ## Tests
 
