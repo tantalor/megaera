@@ -49,8 +49,7 @@ In your `main.py`, build your _WSGIApplication_ by routing "/" to a _Megaera_ ha
     if __name__ == "__main__":
       main()
 
-Finally, your handler in `handlers/default.py` can respond to GET requests very simply by defining a `get` function which accepts `handler` and `response` arguments. The `handler` is a _Megaera_ (is a _webapp.RequestHandler_). The `response` is a special data structure called a _recursivedefaultdict_.
-
+The `handlers/default.py` handler can respond to GET requests very simply by defining a `get` function which accepts `handler` and `response` arguments. The `handler` is a _Megaera_ (is a _webapp.RequestHandler_). The `response` is a special data structure called a _recursivedefaultdict_.
 
     def get(handler, response):
       name = handler.request.get('name')
