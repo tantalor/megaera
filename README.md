@@ -4,3 +4,17 @@
 
 [Google App Engine]: http://code.google.com/appengine/
 [RequestHandler]: http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html
+
+![Megaera](/dodgeballcannon/megaera/raw/master/megaera.jpg)
+
+## Tests
+
+Megaera is packaged with [unit tests](http://docs.python.org/library/unittest.html) in the `test/` directory. 
+### Example
+
+    $ python test/megaera_test.py
+    ........
+    ----------------------------------------------------------------------
+    Ran 8 tests in 0.002s
+
+    OK
