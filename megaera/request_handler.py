@@ -233,7 +233,7 @@ class MegaeraRequestHandler(RequestHandler):
   def redirect(self, *args):
     """Redirects to the given location (unless in JSON/YAML mode)."""
     if not self.is_json() and not self.is_yaml():
-      super(Megaera, self).redirect(*args)
+      super(MegaeraRequestHandler, self).redirect(*args)
   
   def not_found(self, status=404):
     """Returns generic not-found template (see images/errors/ for supported status codes)."""
