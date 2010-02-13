@@ -4,6 +4,8 @@ import megaera
 from megaera.request_handler import MegaeraRequestHandler
 
 from google.appengine.ext.webapp import Request, Response
+from google.appengine.api import apiproxy_stub_map
+from google.appengine.api.memcache import memcache_stub
 
 
 class MockTemplate:
@@ -18,6 +20,11 @@ def mock_handler(file='handlers/mock.py', request='/mock', **response):
   handler.initialize(Request.blank(request), Response())
   handler.response_dict(**response)
   return handler
+
+
+def stub_memcache():
+  apiproxy_stub_map.apiproxy.RegisterStub('memcache', 
+    memcache_stub.MemcacheServiceStub())
 
 
 class TestMegaera(unittest.TestCase):
@@ -76,6 +83,7 @@ class TestMegaera(unittest.TestCase):
     self.assertEquals(self.mock_template.path, 'templates/foo/bar.html')
   
   def test_cache(self):
+    stub_memcache()
     handler = mock_handler()
     handler.cache(foo='foo')
     self.assertEquals(handler.response_dict().foo, 'foo')
