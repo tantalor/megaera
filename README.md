@@ -36,7 +36,7 @@ In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequ
     from google.appengine.ext.webapp import WSGIApplication
     from google.appengine.ext.webapp.util import run_wsgi_app
     
-    from megaera.request_handler import MegaeraRequestHandler
+    from megaera import MegaeraRequestHandler
     
     def application():
       return WSGIApplication([

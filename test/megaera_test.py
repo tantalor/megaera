@@ -1,7 +1,7 @@
 import unittest
 
 import megaera
-from megaera.request_handler import MegaeraRequestHandler
+from megaera import MegaeraRequestHandler
 
 from google.appengine.ext.webapp import Request, Response
 from google.appengine.api import apiproxy_stub_map

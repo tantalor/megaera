@@ -1,7 +1,7 @@
 from google.appengine.ext.webapp import WSGIApplication
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from megaera.request_handler import MegaeraRequestHandler
+from megaera import MegaeraRequestHandler
 
 def application():
   return WSGIApplication([
