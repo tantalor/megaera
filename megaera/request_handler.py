@@ -124,7 +124,7 @@ class MegaeraRequestHandler(RequestHandler):
     if self.has_param('no_cache'):
       return
     cached = memcache.get(
-      key=[self.page_name(), vary],
+      key=str([self.page_name(), vary]),
       namespace="handler-cache")
     if cached:
       # update the response
@@ -134,7 +134,7 @@ class MegaeraRequestHandler(RequestHandler):
   def cache(self, time=0, vary=None, **kwargs):
     """Caches and updates the response dict with the given values for the current page."""
     memcache.set(
-      key=[self.page_name(), vary],
+      key=str([self.page_name(), vary]),
       value=kwargs,
       time=time,
       namespace="handler-cache")
