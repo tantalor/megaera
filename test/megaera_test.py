@@ -74,6 +74,11 @@ class TestMegaera(unittest.TestCase):
     handler.render(None)
     self.assertTrue(handler.is_atom())
     self.assertEquals(self.mock_template.path, 'templates/foo/bar.html')
+  
+  def test_cache(self):
+    handler = mock_handler()
+    handler.cache(foo='foo')
+    self.assertEquals(handler.response_dict().foo, 'foo')
 
 
 if __name__ == '__main__':
