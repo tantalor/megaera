@@ -69,6 +69,20 @@ Finally, `templates/default.html` is a standard django template.
 
 Megaera also automatically exposes `handler` (the request handler) and `is_dev` (a boolean) parameters to the templates.
 
+## Caching
+
+Megaera knows how to cache your handler's output. `MegaeraRequestHandler.cache()` accepts arbitrary keyword parameters to cache indefinitely, keyed by the current handler and with optional `time` time-to-live and `vary` parameters. `MegaeraRequestHandler.cached()` will return `True` if there exists a cached value for the current handler.
+
+    def get(handler, response):
+      if not handler.cached():
+        # cache the following
+        foo_data = fetch_foo_from_datastore()
+        bar_data = fetch_bar_from_datastore
+        # sets response.foo and response.bar
+        handler.cache(foo=foo_data, bar=bar_data, time=60)
+
+The `vary` parameter can be used to key the cache by a variable local to the handler such as an object.
+
 ## Megeara Configuration
 
 By default, Megaera will guess where your templates are located and what they are named based on the filename of your handler modules. For instance, the `handlers.default` module's template should be `templates/default.html`. If you want to change the handlers or templates directories, just set the `MegaeraRequestHandler.HANDLERS_BASE` and `MegaeraRequestHandler.TEMPLATES_BASE` to your desired values in your `main.py`.
