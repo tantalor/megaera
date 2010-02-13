@@ -16,9 +16,9 @@ from google.appengine.api.datastore_errors import NeedIndexError
 from google.appengine.ext.webapp import template, RequestHandler
 
 
-
 class NotFoundException(Exception):
   pass
+
 
 class MegaeraRequestHandler(RequestHandler):
   # These constants are used to locate the default templates.
@@ -27,7 +27,6 @@ class MegaeraRequestHandler(RequestHandler):
   
   def __init__(self):
     self.__response_dict__ = recursivedefaultdict()
-    self._url_args = None
   
   @classmethod
   def with_page(cls, page):
@@ -41,6 +40,16 @@ class MegaeraRequestHandler(RequestHandler):
     if kwargs:
       self.__response_dict__.update(**kwargs)
     return self.__response_dict__
+  
+  def url_args(self):
+    """Returns the URL arguments in the WSGI paths."""
+    return self.__url_args__
+  
+  def url_arg(self, index):
+    """Returns the URL arg at the given index or None."""
+    args = self.url_args()
+    if args and 0 <= index < len(args):
+       return args[index]
     
   def get(self, *args):
     """Responds to GET requests from WSGIApplication."""
@@ -69,7 +78,7 @@ class MegaeraRequestHandler(RequestHandler):
   
   def post(self, *args):
     """Responds to POST requests from WSGIApplication"""
-    self._url_args = args
+    self.__url_args__ = args
     # check if we can post
     if hasattr(self.page, 'post'):
       # run the handler and get the template path
@@ -164,7 +173,7 @@ class MegaeraRequestHandler(RequestHandler):
   
   def handle(self, method, *args):
     """Invokes the given method and return the template path to render."""
-    self._url_args = args
+    self.__url_args__ = args
     try:
       return method(self, self.response_dict())
     except NotFoundException:
