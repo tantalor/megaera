@@ -69,6 +69,10 @@ Finally, `templates/default.html` is a standard django template.
 
 Megaera also automatically exposes `handler` (the request handler) and `is_dev` (a boolean) parameters to the templates.
 
+## Megeara Configuration
+
+By default, Megaera will guess where your templates are located and what they are named based on the filename of your handler modules. For instance, the `handlers.default` module's template should be `templates/default.html`. If you want to change the handlers or templates directories, just set the `MegaeraRequestHandler.HANDLERS_BASE` and `MegaeraRequestHandler.TEMPLATES_BASE` to your desired values in your `main.py`.
+
 ## Local Configuration
 
 Megaera will look for an optional local configuration in `local.yaml`.
