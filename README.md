@@ -40,7 +40,7 @@ In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequ
     
     def application():
       return WSGIApplication([
-        ('/', MegaeraRequestHandler.with_page('handlers/default'))
+        ('/', MegaeraRequestHandler.with_page('handlers.default'))
       ], debug=True)
     
     def main():
