@@ -12,7 +12,7 @@ To solve this, _MegaeraRequestHandler_ (which bases _webapp.RequestHandler_) ass
 
 The basic Google App Engine SDK also omits common tasks such as distinguishing development and production environments and accessing application-specific local configuration.
 
-Megaera solves these problems together by relying on a single `local.yaml` file in the application's root which can store configuration data for the development and production environments. Megaera's `local.config` function then will automatically load the correct configuration data depending on the application's current environment.
+Megaera solves these problems together by relying on a single `local.yaml` file in the application's root which can store configuration data for the development and production environments. Megaera's `local.config()` function then will automatically load the correct configuration data depending on the application's current environment.
 
 ## Handling Requests
 
@@ -26,12 +26,12 @@ Suppose you have the following files in your application.
     main.py
     app.yaml
 
-To get Megaera up and running, first add a route in `app.yaml` from all paths to your `main.py`. Put this at the end if your handlers so any static files or other handlers won't be caught by the url regex.
+To get your Megaera app up and running, first add a route in `app.yaml` from all paths to your `main.py`. Put this at the end if your handlers so any static files or other handlers won't be caught by the url regex. This is the default setting for App Engine.
 
     - url: .*
       script: main.py
 
-In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequestHandler_  with __MegaeraRequestHandler.with_page_.
+In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequestHandler_  with `MegaeraRequestHandler.with_page()`. In this case, we are routing "/" to the `handlers.default` module.
 
     from google.appengine.ext.webapp import WSGIApplication
     from google.appengine.ext.webapp.util import run_wsgi_app
@@ -49,7 +49,7 @@ In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequ
     if __name__ == "__main__":
       main()
 
-The `handlers/default.py` handler can respond to GET requests very simply by defining a `get` function which accepts `handler` and `response` arguments. The `handler` is a _MegaeraRequestHandler_ (a _webapp.RequestHandler_). The `response` is a special data structure called a _recursivedefaultdict_.
+The `handlers.default` module can respond to GET requests very simply by defining a `handlers.default.get()` function which accepts `handler` and `response` arguments. The `handler` argument is a _MegaeraRequestHandler_ (a _webapp.RequestHandler_). The `response` argument is a special data structure called a _recursivedefaultdict_.
 
     def get(handler, response):
       name = handler.request.get('name')
@@ -59,10 +59,15 @@ A _recursivedefaultdict_ is a _[defaultdict](http://docs.python.org/library/coll
 
 Finally, `templates/default.html` is a standard django template.
 
-    <p>{{messages.hello}}</p>
-    {% if is_dev %}<p>This is development.</p>{% endif %}
+    {% if messages %}
+      <p>{{messages.hello}}</p>
+    {% endif %}
+    <p>Your host is {{handler.host}}.</p>
+    {% if is_dev %}
+      <p>This is development.</p>
+    {% endif %}
 
-Megaera also automatically exposes `handler` (the request handler) and `is_dev` (a boolean) values to the templates.
+Megaera also automatically exposes `handler` (the request handler) and `is_dev` (a boolean) parameters to the templates.
 
 ## Local Configuration
 
