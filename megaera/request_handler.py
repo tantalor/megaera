@@ -119,22 +119,22 @@ class MegaeraRequestHandler(RequestHandler):
     """Returns the current host's name."""
     return os.environ.get('HTTP_HOST')
   
-  def cached(self):
+  def cached(self, vary=None):
     """Returns if the current page is cached and updates the response dict with the cached values."""
     if self.has_param('no_cache'):
       return
     cached = memcache.get(
-      key=self.page_name(),
+      key=[self.page_name(), vary],
       namespace="handler-cache")
     if cached:
       # update the response
       self.response_dict(**cached)
       return True
   
-  def cache(self, time=0, **kwargs):
+  def cache(self, time=0, vary=None, **kwargs):
     """Caches and updates the response dict with the given values for the current page."""
     memcache.set(
-      key=self.page_name(),
+      key=[self.page_name(), vary],
       value=kwargs,
       time=time,
       namespace="handler-cache")
