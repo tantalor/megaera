@@ -26,7 +26,7 @@ class MegaeraRequestHandler(RequestHandler):
   TEMPLATES_BASE = 'templates'
   
   def __init__(self):
-    self._response_dict = recursivedefaultdict()
+    self.__response_dict__ = recursivedefaultdict()
     self._url_args = None
   
   @classmethod
@@ -39,8 +39,8 @@ class MegaeraRequestHandler(RequestHandler):
   def response_dict(self, **kwargs):
     """Returns the response dictionary and sets the given values."""
     if kwargs:
-      self._response_dict.update(**kwargs)
-    return self._response_dict
+      self.__response_dict__.update(**kwargs)
+    return self.__response_dict__
     
   def get(self, *args):
     """Responds to GET requests from WSGIApplication."""
