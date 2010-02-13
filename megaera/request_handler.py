@@ -119,19 +119,12 @@ class MegaeraRequestHandler(RequestHandler):
     """Returns the current host's name."""
     return os.environ.get('HTTP_HOST')
   
-  def cache_key(self, page=None):
-    """Returns the cache key of the given page or the current page."""
-    if not page:
-      page = self.page
-    if page:
-      return page.__file__
-  
   def cached(self):
     """Returns if the current page is cached and updates the response dict with the cached values."""
     if self.has_param('no_cache'):
       return
     cached = memcache.get(
-      key=self.cache_key(),
+      key=self.page_name(),
       namespace="handler-cache")
     if cached:
       # update the response
@@ -141,7 +134,7 @@ class MegaeraRequestHandler(RequestHandler):
   def cache(self, time=0, **kwargs):
     """Caches and updates the response dict with the given values for the current page."""
     memcache.set(
-      key=self.cache_key(),
+      key=self.page_name(),
       value=kwargs,
       time=time,
       namespace="handler-cache")
@@ -151,15 +144,22 @@ class MegaeraRequestHandler(RequestHandler):
   def invalidate(self, page=None):
     """Invalidates the cache for given page or the current page."""
     memcache.delete(
-      key=self.cache_key(page),
+      key=self.page_name(page),
       namespace="handler-cache")
+  
+  def page_name(self, page=None):
+    """Returns the name of the given page or the current page."""
+    if not page:
+      page = self.page
+    match = re.compile("%s/([^.]*)" % self.HANDLERS_BASE).search(page.__file__)
+    if match:
+      return match.group(1)
   
   def default_template(self, ext="html"):
     """Returns the path for the current page's default template."""
-    page = self.page.__file__
-    match = re.compile("%s/([^.]*)" % self.HANDLERS_BASE).search(page)
-    if match and match.group(1):
-      return "%s.%s" % (match.group(1), ext)
+    name = self.page_name()
+    if name:
+      return "%s.%s" % (name, ext)
     raise Exception("failed to build default template for %s" % page)
   
   def handle(self, method, *args):
