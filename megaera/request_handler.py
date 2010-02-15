@@ -129,7 +129,8 @@ class MegaeraRequestHandler(RequestHandler):
     return os.environ.get('HTTP_HOST')
   
   def cache_key(self, page=None, vary=None):
-    return str([self.page_name(page=page), vary])
+    page_name = self.page_name(page=page)
+    return '-'.join([str(x) for x in (page_name, vary) if x])
   
   def cached(self, vary=None):
     """Returns if the current page is cached and updates the response dict with the cached values."""
