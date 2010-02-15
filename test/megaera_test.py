@@ -23,13 +23,16 @@ def mock_handler(file='handlers/mock.py', request='/mock', **response):
 
 
 def stub_memcache():
-  apiproxy_stub_map.apiproxy.RegisterStub('memcache', 
-    memcache_stub.MemcacheServiceStub())
-
+  try:
+    apiproxy_stub_map.apiproxy.RegisterStub('memcache', 
+      memcache_stub.MemcacheServiceStub())
+  except AssertionError:
+    pass
 
 class TestMegaera(unittest.TestCase):
   def setUp(self):
     self.mock_template = megaera.request_handler.template = MockTemplate()
+    stub_memcache()
   
   def test_with_page(self):
     class MockPage: __file__ = ''
@@ -83,11 +86,33 @@ class TestMegaera(unittest.TestCase):
     self.assertEquals(self.mock_template.path, 'templates/foo/bar.html')
   
   def test_cache(self):
-    stub_memcache()
     handler = mock_handler()
     handler.cache(foo='foo')
+    handler = mock_handler()
+    self.assertTrue(handler.cached())
     self.assertEquals(handler.response_dict().foo, 'foo')
-
+  
+  def test_cache_vary(self):
+    handler = mock_handler()
+    handler.cache(foo='foo', vary='bar')
+    handler = mock_handler()
+    self.assertTrue(handler.cached(vary='bar'))
+    self.assertEquals(handler.response_dict().foo, 'foo')
+  
+  def test_cache_invalidate(self):
+    handler = mock_handler()
+    handler.cache(foo='foo')
+    handler = mock_handler()
+    handler.invalidate()
+    self.assertFalse(handler.cached())
+  
+  def test_cache_vary_invalidate(self):
+    handler = mock_handler()
+    handler.cache(foo='foo', vary='bar')
+    handler = mock_handler()
+    handler.invalidate(vary='bar')
+    self.assertFalse(handler.cached())
+  
 
 if __name__ == '__main__':
   unittest.main()
