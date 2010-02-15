@@ -156,7 +156,7 @@ class MegaeraRequestHandler(RequestHandler):
   def invalidate(self, page=None, vary=None):
     """Invalidates the cache for given page or the current page."""
     memcache.delete(
-      key=self.page_name(page),
+      key=self.cache_key(vary=vary, page=page),
       namespace="handler-cache")
   
   def page_name(self, page=None):
