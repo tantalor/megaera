@@ -71,7 +71,7 @@ Megaera also automatically exposes `handler` (the request handler) and `is_dev` 
 
 ## Caching
 
-Megaera knows how to cache your handler's output. `MegaeraRequestHandler.cache()` accepts arbitrary keyword parameters to cache indefinitely, keyed by the current handler and with optional `time` time-to-live and `vary` parameters. `MegaeraRequestHandler.cached()` will return `True` if there exists a cached value for the current handler.
+Megaera knows how to cache your handler's output. `MegaeraRequestHandler.cache()` accepts arbitrary keyword parameters to cache indefinitely, keyed by the current handler and with optional `time` time-to-live and `vary` parameters. `MegaeraRequestHandler.cached()` will return `True` if there exists a cached value for the current handler and optional `vary` parameter.
 
     def get(handler, response):
       if not handler.cached():
