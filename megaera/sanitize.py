@@ -1,3 +1,6 @@
+from google.appengine.api import datastore_types
+
+
 def sanitize(obj):
   """Sanitize for json or yaml output."""
   if isinstance(obj, dict):
@@ -9,7 +12,5 @@ def sanitize(obj):
   if hasattr(obj, 'sanitize'):
     # a sanitizeable object
     return obj.sanitize()
-  if isinstance(obj, BaseException):
-    # an exception
-    return str(obj)
-  return obj
+  # default: stringify
+  return str(obj)
