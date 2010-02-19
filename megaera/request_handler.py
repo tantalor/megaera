@@ -213,7 +213,7 @@ class MegaeraRequestHandler(RequestHandler):
       return
     if self.is_yaml():
       sanitized = sanitize(self.response_dict())
-      yaml_str = yaml.dump(sanitized, default_flow_style=False)
+      yaml_str = yaml.safe_dump(sanitized, default_flow_style=False)
       self.response.headers['Content-Type'] = "text/plain; charset=UTF-8"
       self.response.out.write(yaml_str)
       return;
