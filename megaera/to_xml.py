@@ -17,6 +17,10 @@ def add(doc, elem, obj):
   elif hasattr(obj, '__iter__'):
     # sequence
     add_seq(doc, elem, obj)
+  elif isinstance(obj, unicode):
+    # default: text node
+    child = doc.createTextNode(obj.encode('utf8'))
+    elem.appendChild(child)    
   else:
     # default: text node
     child = doc.createTextNode(str(obj))
