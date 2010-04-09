@@ -1,14 +1,16 @@
 # Megaera
 
-**Megaera** is a python module for [Google App Engine](http://code.google.com/appengine/) applications. It offers a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_ called _MegaeraRequestHandler_ with additional functionality.
+**Megaera** is a python package which simplifies the creation of [Google App Engine](http://code.google.com/appengine/) request handlers.
 
-![Megaera, Tisipone, and Alecto](/dodgeballcannon/megaera/raw/master/megaera.jpg)
+The core component of Megaera is the _MegaeraRequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
+
+![Megaera, Tisipone, and Alecto](http://github.com/dodgeballcannon/megaera/raw/master/megaera.jpg)
 
 ## Motivation
 
 The _webapp.RequestHandler_ class lacks several features common to web application frameworks such as automatic rendering of templates and support for alternate output formats (e.g., YAML, JSON).
 
-To solve this, _MegaeraRequestHandler_ (which bases _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
+To solve this, _MegaeraRequestHandler_ (which derives from _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
 
 The basic Google App Engine SDK also omits common tasks such as distinguishing development and production environments and accessing application-specific local configuration.
 
