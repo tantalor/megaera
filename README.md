@@ -4,7 +4,7 @@
 
 The core component of Megaera is the _MegaeraRequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
 
-![Megaera, Tisipone, and Alecto](http://github.com/dodgeballcannon/megaera/raw/master/megaera.jpg)
+![Megaera, Tisipone, and Alecto](http://github.com/tantalor/megaera/raw/master/megaera.jpg)
 
 ## Motivation
 
@@ -118,6 +118,7 @@ If a request's query parameters contain a `json`, `yaml`, or `atom` key, then th
 For example, the `/?yaml` request will render your default handler in YAML.
 
 In the case of Atom, instead of rendering the "html" template, Megaera will loook for a template ending with "atom", e.g., "templates/default.atom".
+
 
 Megaera will recursively sanitize the response in JSON or YAML mode. You can (and should) define `sanitize()` methods on your models to return sanitized data for the client.
 
