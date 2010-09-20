@@ -1,41 +1,39 @@
 from xml.dom.minidom import Document
 
 
-def to_xml(obj, tag="data"):
+def to_xml(value, root='data', indent='  '):
   """Returns XML from dicts or seqs."""
   doc = Document()
-  body = doc.createElement(tag)
-  add(doc, body, obj)
-  doc.appendChild(body)
-  return doc.toprettyxml(indent='  ')
+  if hasattr(value, '__iter__') and not isinstance(value, dict):
+    # special case for top-level sequence
+    parent = doc.createElement(root)
+    doc.appendChild(parent)
+    add(doc, parent, 'value', value)
+  else:
+    add(doc, doc, root, value)
+  return doc.toprettyxml(indent=indent)
 
-def add(doc, elem, obj):
-  """Adds object to document at element."""
-  if isinstance(obj, dict):
-    # dictionary
-    add_dict(doc, elem, obj)
-  elif hasattr(obj, '__iter__'):
-    # sequence
-    add_seq(doc, elem, obj)
-  elif isinstance(obj, unicode):
-    # default: text node
-    child = doc.createTextNode(obj.encode('utf8'))
-    elem.appendChild(child)    
+def add(doc, parent, key, value):
+  """Adds value to document under parent as key."""
+  if isinstance(value, dict):
+    child = doc.createElement(key)
+    parent.appendChild(child)
+    for item in value.iteritems():
+      add(doc, child, *item)
+  elif hasattr(value, '__iter__'):
+    for item in value:
+      if hasattr(item, '__iter__') and not isinstance(item, dict):
+        child = doc.createElement('value')
+        parent.appendChild(child)
+        add(doc, child, 'value', item)
+      else:
+        add(doc, parent, key, item)
   else:
     # default: text node
-    child = doc.createTextNode(str(obj))
-    elem.appendChild(child)
-
-def add_dict(doc, elem, d):
-  """Adds dictionary to document at element."""
-  for key, value in d.iteritems():
+    if isinstance(value, unicode):
+      text = value.encode('utf8')
+    else:
+      text = str(value)
     child = doc.createElement(key)
-    add(doc, child, value)
-    elem.appendChild(child)
-
-def add_seq(doc, elem, seq, tag="value"):
-  """Adds sequence to document at element."""
-  for value in seq:
-    child = doc.createElement(tag)
-    add(doc, child, value)
-    elem.appendChild(child)
+    child.appendChild(doc.createTextNode(text))
+    parent.appendChild(child)
