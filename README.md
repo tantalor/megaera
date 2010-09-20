@@ -131,9 +131,9 @@ Megaera is an RPC Web service but borrows a few ideas from REST, e.g., using HTT
 Megaera is packaged with [unit tests](http://docs.python.org/library/unittest.html) in the `test/` directory. 
 ### Example
 
-    $ python test/megaera_test.py
-    ........
+    megaera$ python test/all.py
+    ...................
     ----------------------------------------------------------------------
-    Ran 8 tests in 0.002s
+    Ran 19 tests in 0.007s
 
     OK
