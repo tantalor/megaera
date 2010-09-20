@@ -224,7 +224,7 @@ class MegaeraRequestHandler(RequestHandler):
       return;
     if self.is_xml():
       sanitized = sanitize(self.response_dict())
-      xml_str = to_xml(obj=sanitized, tag="response")
+      xml_str = to_xml(value=sanitized, root="response")
       self.response.headers['Content-Type'] = "text/xml; charset=UTF-8"
       self.response.out.write(xml_str)
       return;
