@@ -4,6 +4,7 @@ import re
 import sys
 import traceback
 import yaml
+import types
 
 from sanitize import sanitize
 from recursivedefaultdict import recursivedefaultdict
@@ -31,10 +32,14 @@ class MegaeraRequestHandler(RequestHandler):
   
   @classmethod
   def with_page(cls, page):
+    if isinstance(page, types.ModuleType):
+      return type(page.__file__, (cls,), dict(page=page))
     if isinstance(page, str):
-      __import__(page)
-      page = sys.modules[page]
-    return type(page.__file__, (cls,), dict(page=page))
+      try:
+        __import__(page)
+        return cls.with_page(page=sys.modules[page])
+      except ImportError:
+        logging.error("missing handler for %s", page)
   
   def response_dict(self, **kwargs):
     """Returns the response dictionary and sets the given values."""
