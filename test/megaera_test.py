@@ -1,4 +1,5 @@
 import unittest
+import types
 
 import megaera
 from megaera import MegaeraRequestHandler
@@ -14,9 +15,13 @@ class MockTemplate:
     self.vars = vars
 
 
+def mock_page(file=''):
+  page = types.ModuleType('MockPage')
+  page.__file__ = file
+  return page
+
 def mock_handler(file='handlers/mock.py', request='/mock', **response):
-  class MockPage: __file__ = file
-  handler = MegaeraRequestHandler.with_page(MockPage())()
+  handler = MegaeraRequestHandler.with_page(mock_page(file))()
   handler.initialize(Request.blank(request), Response())
   handler.response_dict(**response)
   return handler
@@ -35,8 +40,7 @@ class TestMegaera(unittest.TestCase):
     stub_memcache()
   
   def test_with_page(self):
-    class MockPage: __file__ = ''
-    page = MockPage()
+    page = mock_page()
     handler = MegaeraRequestHandler.with_page(page)()
     self.assertEquals(handler.page, page)
   
