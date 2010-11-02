@@ -26,6 +26,8 @@ class MegaeraRequestHandler(RequestHandler):
   # These constants are used to locate the default templates.
   HANDLERS_BASE = 'handlers'
   TEMPLATES_BASE = 'templates'
+  NOT_FOUND_HTML = 'not_found.html'
+  ERROR_HTML = 'error.html'
   
   def __init__(self):
     self.__response_dict__ = recursivedefaultdict()
@@ -207,8 +209,8 @@ class MegaeraRequestHandler(RequestHandler):
       error_type=error_type,
       tb_formatted=tb_formatted)
     logging.error("%s: %s", error_type, error)
-    self.response.set_status(code=500)
-    return 'error.html'
+    self.set_status(status=500)
+    return self.ERROR_HTML
   
   def render(self, path, base="html"):
     """Renders the given template or the default template, or JSON(P)/YAML."""
@@ -235,21 +237,27 @@ class MegaeraRequestHandler(RequestHandler):
       return;
     if not path:
       path = self.default_template(ext=base)
-    path = os.path.join(self.TEMPLATES_BASE, path)
-    if self.file_exists(path):
+    full_path = os.path.join(self.TEMPLATES_BASE, path)
+    if self.file_exists(full_path):
       try:
         # the template might find these handy
         self.response_dict(
           handler=self,
           is_dev=env.is_dev()
         )
-        rendered = template.render(path, self.response_dict())
+        rendered = template.render(full_path, self.response_dict())
         self.response.out.write(rendered)
       except template.django.template.TemplateSyntaxError, error:
         self.response.headers['Content-Type'] = 'text/plain'
         message = "Template syntax error: %s" % error
         logging.critical(message)
         self.response.out.write(message)
+    elif path is self.ERROR_HTML:
+      self.response.headers['Content-Type'] = 'text/plain'
+      self.response.out.write("%s %s" % (self.get_status(), self.get_error()))
+    elif path is self.NOT_FOUND_HTML:
+      self.response.headers['Content-Type'] = 'text/plain'
+      self.response.out.write("%s %s" % (self.get_status(), 'not found'))
     else:
       self.response.headers['Content-Type'] = 'text/plain'
       message = "Template not found: %s" % path
@@ -265,10 +273,24 @@ class MegaeraRequestHandler(RequestHandler):
       super(MegaeraRequestHandler, self).redirect(*args)
   
   def not_found(self, status=404):
-    """Returns generic not-found template (see images/errors/ for supported status codes)."""
+    """Returns generic not-found template."""
+    self.set_status(status=status)
+    return self.NOT_FOUND_HTML
+  
+  def set_status(self, status):
+    """Sets the response status."""
     self.response_dict(status=status)
     self.response.set_status(code=status)
-    return 'not_found.html'
+  
+  def get_status(self):
+    """Returns the response status."""
+    response_dict = self.response_dict()
+    return response_dict.status
+  
+  def get_error(self):
+    """Returns the response error message if any."""
+    response_dict = self.response_dict()
+    return response_dict.error
   
   def form_error(self, **kwargs):
     """Set the given form errors."""
