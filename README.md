@@ -124,7 +124,7 @@ Megaera will recursively sanitize the response in JSON or YAML mode. You can (an
 
 ## Half-REST
 
-Megaera is an RPC Web service but borrows a few ideas from REST, e.g., using HTTP ''GET'' and ''POST'' verbs for reads and writes and offering multiple response formats. This pattern is called ["half-REST"](http://stereolambda.com/2010/04/21/the-reason-behind-the-half-rest-design-pattern/).
+Megaera is an RPC Web service but borrows a few ideas from REST, e.g., using HTTP "GET" and "POST" verbs for reads and writes and offering multiple response formats. This pattern is called [half-REST](http://stereolambda.com/2010/04/21/the-reason-behind-the-half-rest-design-pattern/).
 
 ## Tests
 
