@@ -95,7 +95,7 @@ Megaera will look for an optional local configuration in `local.yaml`.
 
 The structure of the local configuration is a dictionary. Every value of the dictionary may optionally be a dictionary with _prod_ and _dev_ keys. In this case, the _prod_ value will be used in production and the _dev_ value will be used in development.
 
-The local configuration will automatically be cached in memcached under they key _local_config_.
+The local configuration will automatically be cached in memcached.
 
 To load the entire configuration for a given environment, call `local.config()`.
 
