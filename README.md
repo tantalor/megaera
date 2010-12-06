@@ -4,7 +4,7 @@
 
 The core component of Megaera is the _MegaeraRequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
 
-![Megaera, Tisipone, and Alecto](http://github.com/tantalor/megaera/raw/master/megaera.jpg)
+![Megaera, Tisipone, and Alecto](https://github.com/tantalor/megaera/raw/master/megaera.jpg)
 
 ## Motivation
 
