@@ -2,7 +2,7 @@ import unittest
 import types
 
 import megaera
-from megaera import MegaeraRequestHandler
+from megaera import RequestHandler
 
 from google.appengine.ext.webapp import Request, Response
 from google.appengine.api import apiproxy_stub_map
@@ -21,7 +21,7 @@ def mock_page(file=''):
   return page
 
 def mock_handler(file='handlers/mock.py', request='/mock', **response):
-  handler = MegaeraRequestHandler.with_page(mock_page(file))()
+  handler = RequestHandler.with_page(mock_page(file))()
   handler.initialize(Request.blank(request), Response())
   handler.response_dict(**response)
   return handler
@@ -41,7 +41,7 @@ class TestMegaera(unittest.TestCase):
   
   def test_with_page(self):
     page = mock_page()
-    handler = MegaeraRequestHandler.with_page(page)()
+    handler = RequestHandler.with_page(page)()
     self.assertEquals(handler.page, page)
   
   def test_default_template(self):

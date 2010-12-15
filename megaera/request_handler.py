@@ -15,14 +15,15 @@ from to_xml import to_xml
 
 from google.appengine.api import users, memcache
 from google.appengine.api.datastore_errors import NeedIndexError
-from google.appengine.ext.webapp import template, RequestHandler
+import google.appengine.ext.webapp
+from google.appengine.ext.webapp import template
 
 
 class NotFoundException(Exception):
   pass
 
 
-class MegaeraRequestHandler(RequestHandler):
+class RequestHandler(google.appengine.ext.webapp.RequestHandler):
   # These constants are used to locate the default templates.
   HANDLERS_BASE = 'handlers'
   TEMPLATES_BASE = 'templates'
@@ -270,7 +271,7 @@ class MegaeraRequestHandler(RequestHandler):
   def redirect(self, *args):
     """Redirects to the given location (unless in JSON/YAML mode)."""
     if not self.is_json() and not self.is_yaml():
-      super(MegaeraRequestHandler, self).redirect(*args)
+      super(RequestHandler, self).redirect(*args)
   
   def not_found(self, status=404):
     """Returns generic not-found template."""

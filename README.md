@@ -2,7 +2,7 @@
 
 **Megaera** is a python package which simplifies the creation of [Google App Engine](http://code.google.com/appengine/) request handlers.
 
-The core component of Megaera is the _MegaeraRequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
+The core component of Megaera is the _RequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
 
 ![Megaera, Tisipone, and Alecto](https://github.com/tantalor/megaera/raw/master/megaera.jpg)
 
@@ -10,7 +10,7 @@ The core component of Megaera is the _MegaeraRequestHandler_ class, a subclass o
 
 The _webapp.RequestHandler_ class lacks several features common to web application frameworks such as automatic rendering of templates and support for alternate output formats (e.g., YAML, JSON).
 
-To solve this, _MegaeraRequestHandler_ (which derives from _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
+To solve this, _RequestHandler_ (which derives from _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
 
 The basic Google App Engine SDK also omits common tasks such as distinguishing development and production environments and accessing application-specific local configuration.
 
@@ -33,16 +33,16 @@ To get your Megaera app up and running, first add a route in `app.yaml` from all
     - url: .*
       script: main.py
 
-In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequestHandler_  with `MegaeraRequestHandler.with_page()`. In this case, we are routing "/" to the `handlers.default` module.
+In your `main.py`, build your _WSGIApplication_ by routing "/" to a _RequestHandler_  with `RequestHandler.with_page()`. In this case, we are routing "/" to the `handlers.default` module.
 
     from google.appengine.ext.webapp import WSGIApplication
     from google.appengine.ext.webapp.util import run_wsgi_app
     
-    from megaera import MegaeraRequestHandler
+    from megaera import RequestHandler
     
     def application():
       return WSGIApplication([
-        ('/', MegaeraRequestHandler.with_page('handlers.default'))
+        ('/', RequestHandler.with_page('handlers.default'))
       ], debug=True)
     
     def main():
@@ -51,7 +51,7 @@ In your `main.py`, build your _WSGIApplication_ by routing "/" to a _MegaeraRequ
     if __name__ == "__main__":
       main()
 
-The `handlers.default` module can respond to GET requests very simply by defining a `handlers.default.get()` function which accepts `handler` and `response` arguments. The `handler` argument is a _MegaeraRequestHandler_ (a _webapp.RequestHandler_). The `response` argument is a special data structure called a _recursivedefaultdict_.
+The `handlers.default` module can respond to GET requests very simply by defining a `handlers.default.get()` function which accepts `handler` and `response` arguments. The `handler` argument is a _RequestHandler_ (a _webapp.RequestHandler_). The `response` argument is a special data structure called a _recursivedefaultdict_.
 
     def get(handler, response):
       name = handler.request.get('name')
@@ -73,7 +73,7 @@ Megaera also automatically exposes `handler` (the request handler) and `is_dev` 
 
 ## Caching
 
-Megaera knows how to cache your handler's output. `MegaeraRequestHandler.cache()` accepts arbitrary keyword parameters to cache indefinitely, keyed by the current handler and with optional `time` time-to-live and `vary` parameters. `MegaeraRequestHandler.cached()` will return `True` if there exists a cached value for the current handler and optional `vary` parameter.
+Megaera knows how to cache your handler's output. `RequestHandler.cache()` accepts arbitrary keyword parameters to cache indefinitely, keyed by the current handler and with optional `time` time-to-live and `vary` parameters. `RequestHandler.cached()` will return `True` if there exists a cached value for the current handler and optional `vary` parameter.
 
     def get(handler, response):
       if not handler.cached():
@@ -87,7 +87,7 @@ The `vary` parameter can be used to key the cache by a variable local to the han
 
 ## Megeara Configuration
 
-By default, Megaera will guess where your templates are located and what they are named based on the filename of your handler modules. For instance, the `handlers.default` module's template should be `templates/default.html`. If you want to change the handlers or templates directories, just set the `MegaeraRequestHandler.HANDLERS_BASE` and `MegaeraRequestHandler.TEMPLATES_BASE` to your desired values in your `main.py`.
+By default, Megaera will guess where your templates are located and what they are named based on the filename of your handler modules. For instance, the `handlers.default` module's template should be `templates/default.html`. If you want to change the handlers or templates directories, just set the `RequestHandler.HANDLERS_BASE` and `RequestHandler.TEMPLATES_BASE` to your desired values in your `main.py`.
 
 ## Local Configuration
 

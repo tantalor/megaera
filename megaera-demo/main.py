@@ -1,11 +1,11 @@
 from google.appengine.ext.webapp import WSGIApplication
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from megaera import MegaeraRequestHandler
+from megaera import RequestHandler
 
 def application():
   return WSGIApplication([
-    ('/', MegaeraRequestHandler.with_page('handlers.default'))
+    ('/', RequestHandler.with_page('handlers.default'))
   ], debug=True)
 
 def main():
