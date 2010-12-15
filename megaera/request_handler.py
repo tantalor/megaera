@@ -229,13 +229,13 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
       yaml_str = yaml.safe_dump(sanitized, default_flow_style=False)
       self.response.headers['Content-Type'] = "text/plain; charset=UTF-8"
       self.response.out.write(yaml_str)
-      return;
+      return
     if self.is_xml():
       sanitized = sanitize(self.response_dict())
       xml_str = to_xml(value=sanitized, root="response")
       self.response.headers['Content-Type'] = "text/xml; charset=UTF-8"
       self.response.out.write(xml_str)
-      return;
+      return
     if not path:
       path = self.default_template(ext=base)
     full_path = os.path.join(self.TEMPLATES_BASE, path)
