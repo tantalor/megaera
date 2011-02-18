@@ -16,7 +16,7 @@ from to_xml import to_xml
 from google.appengine.api import users, memcache
 from google.appengine.api.datastore_errors import NeedIndexError
 import google.appengine.ext.webapp
-from google.appengine.ext.webapp import template
+import jinja2
 
 
 class NotFoundException(Exception):
@@ -246,9 +246,10 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
           handler=self,
           is_dev=env.is_dev()
         )
-        rendered = template.render(full_path, self.response_dict())
+        template = jinja2.Template(file(full_path).read())
+        rendered = template.render(**self.response_dict())
         self.response.out.write(rendered)
-      except template.django.template.TemplateSyntaxError, error:
+      except jinja2.TemplateError, error:
         self.response.headers['Content-Type'] = 'text/plain'
         message = "Template syntax error: %s" % error
         logging.critical(message)
