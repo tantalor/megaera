@@ -10,7 +10,7 @@ The core component of Megaera is the _RequestHandler_ class, a subclass of _[web
 
 The _webapp.RequestHandler_ class lacks several features common to web application frameworks such as automatic rendering of templates and support for alternate output formats (e.g., YAML, JSON).
 
-To solve this, _RequestHandler_ (which derives from _webapp.RequestHandler_) associates a "handler" with one or more django templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
+To solve this, _RequestHandler_ (which derives from _webapp.RequestHandler_) associates a "handler" with one or more [jinja2](http://jinja.pocoo.org/) templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
 
 The basic Google App Engine SDK also omits common tasks such as distinguishing development and production environments and accessing application-specific local configuration.
 
@@ -59,12 +59,12 @@ The `handlers.default` module can respond to GET requests very simply by definin
 
 A _recursivedefaultdict_ is a _[defaultdict](http://docs.python.org/library/collections.html#collections.defaultdict)_ whose keys can be read/written by the dot operator (i.e., _[getattr](http://docs.python.org/reference/datamodel.html#object.__getattr__)_, _[setattr](http://docs.python.org/reference/datamodel.html#object.__setattr__)_) and whose "default" is another _recursivedefaultdict_. The end result is a very simple-to-use datastructure. Megaera's _recursivedefaultdict_ is based on code samples by [Kent S Johnson](http://personalpages.tds.net/~kent37/kk/00013.html).
 
-Finally, `templates/default.html` is a standard django template.
+Finally, `templates/default.html` is a simple [jinja2](http://jinja.pocoo.org/) template.
 
     {% if messages %}
       <p>{{messages.hello}}</p>
     {% endif %}
-    <p>Your host is {{handler.host}}.</p>
+    <p>Your host is {{handler.host()}}.</p>
     {% if is_dev %}
       <p>This is development.</p>
     {% endif %}
