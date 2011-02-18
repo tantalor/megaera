@@ -1,0 +1,3 @@
+[submodule "vendor/jinja2"]
+	path = vendor/jinja2
+	url = git://github.com/mitsuhiko/jinja2.git
