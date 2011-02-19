@@ -246,7 +246,8 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
           handler=self,
           is_dev=env.is_dev()
         )
-        template = jinja2.Template(file(full_path).read())
+        envr = jinja2.Environment(loader=jinja2.FileSystemLoader(self.TEMPLATES_BASE))
+        template = envr.get_template(path)
         rendered = template.render(**self.response_dict())
         self.response.out.write(rendered)
       except jinja2.TemplateError, error:
