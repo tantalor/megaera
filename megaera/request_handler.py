@@ -32,6 +32,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
   
   def __init__(self):
     self.__response_dict__ = recursivedefaultdict()
+    self.jinja = jinja2.Environment(loader=jinja2.FileSystemLoader(self.TEMPLATES_BASE))
   
   @classmethod
   def with_page(cls, page):
@@ -246,15 +247,16 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
           handler=self,
           is_dev=env.is_dev()
         )
-        envr = jinja2.Environment(loader=jinja2.FileSystemLoader(self.TEMPLATES_BASE))
-        template = envr.get_template(path)
+        template = self.jinja.get_template(path)
         rendered = template.render(**self.response_dict())
         self.response.out.write(rendered)
       except jinja2.TemplateError, error:
         self.response.headers['Content-Type'] = 'text/plain'
         message = "Template syntax error: %s" % error
         logging.critical(message)
-        self.response.out.write(message)
+        (error_type, error, tb) = sys.exc_info()
+        tb_formatted = traceback.format_tb(tb)
+        self.response.out.write("\n".join([message]+tb_formatted))
     elif path is self.ERROR_HTML:
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write("%s %s" % (self.get_status(), self.get_error()))
