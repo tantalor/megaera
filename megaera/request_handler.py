@@ -116,19 +116,19 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
   
   def is_json(self):
     """Returns if the current request is for JSON."""
-    return self.has_param('json')
+    return self.has_param('json') or self.request.path.endswith('.json')
   
   def is_yaml(self):
     """Returns if the current request is for YAML."""
-    return self.has_param('yaml')
+    return self.has_param('yaml') or self.request.path.endswith('.yaml')
   
   def is_xml(self):
     """Returns if the current request is for XML."""
-    return self.has_param('xml')
+    return self.has_param('xml') or self.request.path.endswith('.xml')
   
   def is_atom(self):
     """Returns if the current request is for Atom."""
-    return self.has_param('atom')
+    return self.has_param('atom') or self.request.path.endswith('.atom')
   
   def logout_url(self):
     """Returns the logout URL of the current request."""
