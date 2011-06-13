@@ -5,7 +5,7 @@ from megaera import RequestHandler
 
 def application():
   return WSGIApplication([
-    ('/', RequestHandler.with_page('handlers.default'))
+    RequestHandler.path_with_page('/', 'handlers.default'),
   ], debug=True)
 
 def main():

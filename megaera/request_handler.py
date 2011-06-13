@@ -45,6 +45,10 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
       except ImportError:
         logging.error("missing handler for %s", page)
   
+  @classmethod
+  def path_with_page(cls, path, page):
+    return (path+"\.?(yaml|json|xml|atom)?", cls.with_page(page))
+  
   def response_dict(self, **kwargs):
     """Returns the response dictionary and sets the given values."""
     if kwargs:
