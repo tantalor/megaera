@@ -154,7 +154,7 @@ For example, Megaera will render the data structure `{foo: ["bar", [1, 2]]}` in 
 
 If you want to deliver a generic "not found" page, just call the `not_found()` method from your handler with an optional HTTP status code, e.g. 404 (Not Found). You can customize this message in `templates/not_found.html`. If the handler cannot respond to the request method then Megaera will respond with a 405 (Method Not Allowed) HTTP status code.
 
-If your handler raises an exception, Megaera will deliver a generic error page with the value of the exception and a 500 (Internal Server Error) HTTP status code. You can customize this message in `template/error.html`. If the exception is a `google.appengine.api.datastore_errors.NeedIndexError` then Megaera will response with a 503 (Service Unavailable) HTTP stutus code.
+If your handler raises an exception, Megaera will deliver a generic error page with the value of the exception and a 500 (Internal Server Error) HTTP status code. You can customize this message in `template/error.html`. If the exception is a `google.appengine.api.datastore_errors.NeedIndexError` then Megaera will response with a 503 (Service Unavailable) HTTP status code.
 
 ## Web Service
 
