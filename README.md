@@ -115,16 +115,40 @@ In this example, the _yahoo_ key has distinct _appId_ values for production and 
       dev:
         appid: 89823f9248a5e9408e63d47179f8a8b3
 
-## JSON, YAML, Atom
+## JSON, YAML, XML, Atom
 
-If a request's query parameters contain a `json`, `yaml`, or `atom` key, then the handler's default template will be ignored and the handler's response will be rendered in the desired format.
+Any handler's response can be automatically mapped to JSON, YAML, or XML. Any handler with a ".atom" template can also be rendered as Atom. Megaera knows which format to return based on the request's path suffix or query parameters.
 
-For example, the `/?yaml` request will render your default handler in YAML.
+For example, the `/foo.yaml` or `/foo?yaml` requests will render your "foo" handler in YAML.
 
-In the case of Atom, instead of rendering the "html" template, Megaera will loook for a template ending with "atom", e.g., "templates/default.atom".
+Megaera will try to recursively sanitize the response before returning JSON, YAML, or XML. You should define `sanitize()` methods on your models to return sanitized data for the client.
 
+### XML
 
-Megaera will recursively sanitize the response in JSON or YAML mode. You can (and should) define `sanitize()` methods on your models to return sanitized data for the client.
+Unlike JSON and YAML, arbitrary data structures cannot simply be mapped into XML without making some decisions.
+
+Megaera will map a list to a sequence of elements. If the list is a dictionary value, then the elements be tagged with the dictionary key.
+
+For example, Megaera will render the data structure `{foo: [1, 2]}` in XML as,
+
+    <?xml version="1.0" ?>
+    <response>
+      <foo>1</foo>
+      <foo>2</foo>
+    </response>
+
+If the list is not a dictionary value, the elements will be tagged "value".
+
+For example, Megaera will render the data structure `{foo: ["bar", [1, 2]]}` in XML as,
+
+    <?xml version="1.0" ?>
+    <reponse>
+      <foo>bar</foo>
+      <foo>
+        <value>1</value>
+        <value>2</value>
+      </foo>
+    </response>
 
 ## Error Cases (404, 405, 500, 503)
 
