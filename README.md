@@ -16,7 +16,7 @@ Megaera also simplifies the process of creating a request handler. Instead of su
 
 Frequently applications need to serve different output formats, such as JSON. Megaera simplifies this challenge by automatically serving a variety of output formats for every request handler.
 
-Sometimes your application needs to distinguish between the development and production environment. Megeara provides a simple interface which answers this question to all handlers and templates.
+Sometimes your application needs to distinguish between the development and production environment. Megaera provides a simple interface which answers this question to all handlers and templates.
 
 Applications might have a lot of local configuration, such as external API keys. Megaera has robust support for local configuration stored in a single file in your application root. You can combine configuration data for development and production environments, and your application will automatically use the correct configuration for the current environment.
 
@@ -89,7 +89,7 @@ Megaera knows how to cache your handler's output. `RequestHandler.cache()` accep
 
 The `vary` parameter can be used to key the cache by a variable local to the handler such as an object.
 
-## Megeara Configuration
+## Megaera Configuration
 
 By default, Megaera will guess where your templates are located and what they are named based on the filename of your handler modules. For instance, the `handlers.default` module's template should be `templates/default.html`. If you want to change the handlers or templates directories, just set the `RequestHandler.HANDLERS_BASE` and `RequestHandler.TEMPLATES_BASE` to your desired values in your `main.py`.
 
