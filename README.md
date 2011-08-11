@@ -132,9 +132,11 @@ If you want to deliver a generic "not found" page, just call the `not_found()` m
 
 If your handler raises an exception, Megaera will deliver a generic error page with the value of the exception and a 500 (Internal Server Error) HTTP status code. You can customize this message in `template/error.html`. If the exception is a `google.appengine.api.datastore_errors.NeedIndexError` then Megaera will response with a 503 (Service Unavailable) HTTP stutus code.
 
-## Half-REST
+## Web Service
 
-Megaera is an RPC Web service but borrows a few ideas from REST, e.g., using HTTP "GET" and "POST" verbs for reads and writes and offering multiple response formats. This pattern is called [half-REST](http://stereolambda.com/2010/04/21/the-reason-behind-the-half-rest-design-pattern/).
+Any applications based on Megaera is a [Web service](http://en.wikipedia.org/wiki/Web_service) because it automatically speaks JSON, YAML, XML, and Atom.
+
+Megaera supports GET and POST requests, but not PUT or DELETE, so you likely cannot provide a REST application with Megaera. However, any application which follows the convention of performering writes on (and only on) POST requests might be called [half-REST](http://stereolambda.com/2010/04/21/the-reason-behind-the-half-rest-design-pattern/).
 
 ## Tests
 
