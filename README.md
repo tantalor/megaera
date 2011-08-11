@@ -1,20 +1,24 @@
 # Megaera
 
-**Megaera** is a python package which simplifies the creation of [Google App Engine](http://code.google.com/appengine/) request handlers.
+**Megaera** is a python package which simplifies the creation of [Google App Engine](http://code.google.com/appengine/) applications.
 
-The core component of Megaera is the _RequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
+The core component of Megaera is the _megaera.RequestHandler_ class, a subclass of _[webapp.RequestHandler](http://code.google.com/appengine/docs/python/tools/webapp/requesthandlerclass.html)_. This class extends the basic functionality of _webapp.RequestHandler_ to handle common tasks such as creating request handlers, rendering templates, and handling alternate output formats.
 
 ![Megaera, Tisipone, and Alecto](https://github.com/tantalor/megaera/raw/master/megaera.jpg)
 
 ## Motivation
 
-The _webapp.RequestHandler_ class lacks several features common to web application frameworks such as automatic rendering of templates and support for alternate output formats (e.g., YAML, JSON).
+Google App Engine's _webapp.RequestHandler_ is very powerful, but there are some common features in web applications which it does not handle. It is the developer's responsiblity to add these features.
 
-To solve this, _RequestHandler_ (which derives from _webapp.RequestHandler_) associates a "handler" with one or more [jinja2](http://jinja.pocoo.org/) templates (e.g., html, atom). Each handler is stored in a distinct file and can respond to a GET or POST request (or both). If the request specifies YAML or JSON output, the handler's response is automatically rendered in the specified type.
+One common feature is to render a template (e.g., html, atom) after running a request handler. Megaera solves this problem by detecting the correct template to render based on the filesystem location of your request handler.
 
-The basic Google App Engine SDK also omits common tasks such as distinguishing development and production environments and accessing application-specific local configuration.
+Megaera also simplifies the process of creating a request handler. Instead of subclassing _webapp.RequestHandler_, your request handlers are simple python modules which implement GET and POST functionality. Megaera handles the job of setting up the application's request handler subclasses for you.
 
-Megaera solves these problems together by relying on a single `local.yaml` file in the application's root which can store configuration data for the development and production environments. Megaera's `local.config()` function then will automatically load the correct configuration data depending on the application's current environment.
+Frequently applications need to serve different output formats, such as JSON. Megaera simplifies this challenge by automatically serving a variety of output formats for every request handler.
+
+Sometimes your application needs to distinguish between the development and production environment. Megeara provides a simple interface which answers this question to all handlers and templates.
+
+Applications might have a lot of local configuration, such as external API keys. Megaera has robust support for local configuration stored in a single file in your application root. You can combine configuration data for development and production environments, and your application will automatically use the correct configuration for the current environment.
 
 ## Handling Requests
 
