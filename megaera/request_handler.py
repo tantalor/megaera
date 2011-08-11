@@ -137,6 +137,10 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
     """Returns if the current request is for Atom."""
     return self.has_param('atom') or self.request.path.endswith('.atom')
   
+  def is_html(self):
+    """Returns if the current request is for HTML."""
+    return not self.is_json() and not self.is_yaml() and not self.is_xml() and not self.is_atom()
+  
   def logout_url(self):
     """Returns the logout URL of the current request."""
     return users.create_logout_url(self.request.uri)
@@ -280,8 +284,8 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
     return os.path.exists(path)
   
   def redirect(self, *args):
-    """Redirects to the given location (unless in JSON/YAML mode)."""
-    if not self.is_json() and not self.is_yaml():
+    """Redirects to the given location (in HTML mode)."""
+    if self.is_html():
       self._is_redirect = 1
       super(RequestHandler, self).redirect(*args)
   
