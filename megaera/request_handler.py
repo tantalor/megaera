@@ -103,6 +103,9 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
     # if we encountered errors, run the get handler
     if self.has_errors():
       self.get(*args)
+    elif self._is_redirect and 'Location' in self.response.headers:
+      location = self.response.headers['Location'];
+      self.response.out.write("""Moved to <a href="%s">%s</a>\n""" % (location, location))
     else:
       # otherwise render the template
       self.render(path)
@@ -279,6 +282,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
   def redirect(self, *args):
     """Redirects to the given location (unless in JSON/YAML mode)."""
     if not self.is_json() and not self.is_yaml():
+      self._is_redirect = 1
       super(RequestHandler, self).redirect(*args)
   
   def not_found(self, status=404):
