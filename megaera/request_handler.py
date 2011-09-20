@@ -103,7 +103,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
     # if we encountered errors, run the get handler
     if self.has_errors():
       self.get(*args)
-    elif self._is_redirect and 'Location' in self.response.headers:
+    elif hasattr(self, '_is_redirect') and 'Location' in self.response.headers:
       location = self.response.headers['Location'];
       self.response.out.write("""Moved to <a href="%s">%s</a>\n""" % (location, location))
     else:
