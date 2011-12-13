@@ -3,7 +3,7 @@
   {% if messages %}
     <p>{{messages.hello}}</p>
   {% endif %}
-  <p>Your host is {{handler.host()}}.</p>
+  <p>Your host is {{handler.host()|bold}}.</p>
   {% if is_dev %}
     <p>This is development.</p>
   {% endif %}
