@@ -15,24 +15,23 @@ from to_xml import to_xml
 
 from google.appengine.api import users, memcache
 from google.appengine.api.datastore_errors import NeedIndexError
-import google.appengine.ext.webapp
+import webapp2
 import jinja2
-
 
 class NotFoundException(Exception):
   pass
 
-
-class RequestHandler(google.appengine.ext.webapp.RequestHandler):
-  # These constants are used to locate the default templates.
-  HANDLERS_BASE = 'handlers'
-  TEMPLATES_BASE = 'templates'
-  NOT_FOUND_HTML = 'not_found.html'
-  ERROR_HTML = 'error.html'
+HANDLERS_BASE  = 'handlers'
+TEMPLATES_BASE = 'templates'
+NOT_FOUND_HTML = 'not_found.html'
+ERROR_HTML     = 'error.html'
   
-  def __init__(self):
-    self.__response_dict__ = recursivedefaultdict()
-    self.jinja = jinja2.Environment(loader=jinja2.FileSystemLoader(self.TEMPLATES_BASE))
+JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_BASE))
+
+def get_jinja2_env():
+  return JINJA2_ENV
+
+class RequestHandler(webapp2.RequestHandler):
   
   @classmethod
   def with_page(cls, page):
@@ -51,6 +50,8 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
   
   def response_dict(self, **kwargs):
     """Returns the response dictionary and sets the given values."""
+    if not hasattr(self, '__response_dict__'):
+      setattr(self, '__response_dict__', recursivedefaultdict())
     if kwargs:
       self.__response_dict__.update(**kwargs)
     return self.__response_dict__
@@ -189,7 +190,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
     """Returns the name of the given page or the current page."""
     if not page:
       page = self.page
-    match = re.compile("%s/([^.]*)" % self.HANDLERS_BASE).search(page.__file__)
+    match = re.compile("%s/([^.]*)" % HANDLERS_BASE).search(page.__file__)
     if match:
       return match.group(1)
   
@@ -223,7 +224,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
       tb_formatted=tb_formatted)
     logging.error("%s: %s", error_type, error)
     self.set_status(status=500)
-    return self.ERROR_HTML
+    return ERROR_HTML
   
   def render(self, path, base="html"):
     """Renders the given template or the default template, or JSON(P)/YAML."""
@@ -250,7 +251,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
       return
     if not path:
       path = self.default_template(ext=base)
-    full_path = os.path.join(self.TEMPLATES_BASE, path)
+    full_path = os.path.join(TEMPLATES_BASE, path)
     if self.file_exists(full_path):
       try:
         # the template might find these handy
@@ -258,7 +259,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
           handler=self,
           is_dev=env.is_dev()
         )
-        template = self.jinja.get_template(path)
+        template = JINJA2_ENV.get_template(path)
         rendered = template.render(**self.response_dict())
         self.response.out.write(rendered)
       except jinja2.TemplateError, error:
@@ -268,10 +269,10 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
         (error_type, error, tb) = sys.exc_info()
         tb_formatted = traceback.format_tb(tb)
         self.response.out.write("\n".join([message]+tb_formatted))
-    elif path is self.ERROR_HTML:
+    elif path is ERROR_HTML:
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write("%s %s" % (self.get_status(), self.get_error()))
-    elif path is self.NOT_FOUND_HTML:
+    elif path is NOT_FOUND_HTML:
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write("%s %s" % (self.get_status(), 'not found'))
     else:
@@ -292,7 +293,7 @@ class RequestHandler(google.appengine.ext.webapp.RequestHandler):
   def not_found(self, status=404):
     """Returns generic not-found template."""
     self.set_status(status=status)
-    return self.NOT_FOUND_HTML
+    return NOT_FOUND_HTML
   
   def set_status(self, status):
     """Sets the response status."""
