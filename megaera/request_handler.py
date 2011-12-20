@@ -284,11 +284,11 @@ class RequestHandler(webapp2.RequestHandler):
   def file_exists(self, path):
     return os.path.exists(path)
   
-  def redirect(self, *args):
+  def redirect(self, uri, *args):
     """Redirects to the given location (in HTML mode)."""
     if self.is_html():
       self._is_redirect = 1
-      super(RequestHandler, self).redirect(*args)
+      super(RequestHandler, self).redirect(str(uri), *args)
   
   def not_found(self, status=404):
     """Returns generic not-found template."""
