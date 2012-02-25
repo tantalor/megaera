@@ -62,10 +62,8 @@ class RequestHandler(webapp2.RequestHandler):
   
   def url_arg(self, index):
     """Returns the URL arg at the given index or None."""
-    args = self.url_args()
-    if args and 0 <= index < len(args):
-       return args[index]
-    
+    return self.url_args()[index]
+  
   def get(self, *args):
     """Responds to GET requests from WSGIApplication."""
     if self.has_param('post'):
@@ -152,7 +150,7 @@ class RequestHandler(webapp2.RequestHandler):
   
   def host(self):
     """Returns the current host's name."""
-    return os.environ.get('HTTP_HOST')
+    return self.environ('HTTP_HOST')
   
   def cache_key(self, page=None, vary=None):
     page_name = self.page_name(page=page)
@@ -319,3 +317,17 @@ class RequestHandler(webapp2.RequestHandler):
   def config(self):
     """Returns the local configuration."""
     return local.config()
+    
+  def environ(self, k=None):
+    if k is None:
+      return os.environ
+    else:
+      return os.environ.get(k)
+  
+  def base_path(self):
+    return 'http://%s%s' % (self.host(), self.environ('PATH_INFO'))
+  
+  def extension(self):
+    ext = self.url_arg(-1)
+    if ext:
+      return '.'+ext

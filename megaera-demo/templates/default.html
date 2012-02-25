@@ -7,4 +7,7 @@
   {% if is_dev %}
     <p>This is development.</p>
   {% endif %}
+  <p><a href="{{handler.base_path()}}">This page</a></p>
+  <p><a href="{{handler.base_path()}}.json">This page as json</a></p>
+  <p><a href="{{handler.base_path()}}.yaml">This page as yaml</a></p>
 {% endblock %}
