@@ -27,6 +27,7 @@ NOT_FOUND_HTML = 'not_found.html'
 ERROR_HTML     = 'error.html'
 
 MIME_JSON = 'application/json'
+MIME_XML  = 'application/xml'
 
 JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_BASE))
 
@@ -138,7 +139,7 @@ class RequestHandler(webapp2.RequestHandler):
   
   def is_xml(self):
     """Returns if the current request is for XML."""
-    return self.has_param('xml') or self.request.path.endswith('.xml')
+    return self.has_param('xml') or self.request.path.endswith('.xml') or self.accepts(MIME_XML)
   
   def is_atom(self):
     """Returns if the current request is for Atom."""
@@ -252,7 +253,7 @@ class RequestHandler(webapp2.RequestHandler):
     if self.is_xml():
       sanitized = sanitize(self.response_dict())
       xml_str = to_xml(value=sanitized, root="response")
-      self.response.headers['Content-Type'] = "text/xml; charset=UTF-8"
+      self.response.headers['Content-Type'] = "%s; charset=UTF-8" % MIME_XML
       self.response.out.write(xml_str)
       return
     if not path:
