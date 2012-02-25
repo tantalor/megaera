@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  
+  <title>Megaera Demo</title>
+  <link href="{{handler.base_path()}}" rel="self"/>
+  <id>tag:{{handler.environ('SERVER_NAME')}},2012:</id>
+  <updated>2012-02-25T04:55:49.517080Z</updated>
+</feed>
