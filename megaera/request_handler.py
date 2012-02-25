@@ -25,7 +25,9 @@ HANDLERS_BASE  = 'handlers'
 TEMPLATES_BASE = 'templates'
 NOT_FOUND_HTML = 'not_found.html'
 ERROR_HTML     = 'error.html'
-  
+
+MIME_JSON = 'application/json'
+
 JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_BASE))
 
 def get_jinja2_env():
@@ -120,9 +122,15 @@ class RequestHandler(webapp2.RequestHandler):
   def has_param(self, param):
     return len(self.request.get_all(param)) > 0
   
+  def accepts(self, mime_type):
+    """Returns true if this requests accepts the given MIME type"""
+    accept = self.request.headers['Accept']
+    if accept:
+      return accept == mime_type
+  
   def is_json(self):
     """Returns if the current request is for JSON."""
-    return self.has_param('json') or self.request.path.endswith('.json')
+    return self.has_param('json') or self.request.path.endswith('.json') or self.accepts(MIME_JSON)
   
   def is_yaml(self):
     """Returns if the current request is for YAML."""
@@ -232,7 +240,7 @@ class RequestHandler(webapp2.RequestHandler):
       callback = self.request.get('callback')
       if re.match("^[_a-z]([_a-z0-9])*$", callback, re.IGNORECASE):
         json_str = "%s(%s)" % (callback, json_str) # jsonp
-      self.response.headers['Content-Type'] = "text/javascript; charset=UTF-8"
+      self.response.headers['Content-Type'] = "%s; charset=UTF-8" % MIME_JSON
       self.response.out.write(json_str)
       return
     if self.is_yaml():
