@@ -28,6 +28,7 @@ ERROR_HTML     = 'error.html'
 
 MIME_JSON = 'application/json'
 MIME_XML  = 'application/xml'
+MIME_ATOM = 'application/atom+xml'
 
 JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_BASE))
 
@@ -86,7 +87,7 @@ class RequestHandler(webapp2.RequestHandler):
     # render the template
     if self.is_atom():
       # for atom
-      self.response.headers['Content-Type'] = "application/atom+xml; charset=UTF-8"
+      self.response.headers['Content-Type'] = "%s; charset=UTF-8" % MIME_ATOM
       self.render(path, 'atom')
     else:
       # for html
@@ -143,7 +144,7 @@ class RequestHandler(webapp2.RequestHandler):
   
   def is_atom(self):
     """Returns if the current request is for Atom."""
-    return self.has_param('atom') or self.request.path.endswith('.atom')
+    return self.has_param('atom') or self.request.path.endswith('.atom') or self.accepts(MIME_ATOM)
   
   def is_html(self):
     """Returns if the current request is for HTML."""
