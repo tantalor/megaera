@@ -250,10 +250,8 @@ class RequestHandler(webapp2.RequestHandler):
   
   def render(self, path, base="html"):
     """Renders the given template or the default template, or JSON(P)/YAML."""
-    def urlize(s):
-      return self.urlize(s)
     if self.is_json():
-      sanitized = sanitize(self.response_dict(), urlize)
+      sanitized = sanitize(self.response_dict(), self.urlize)
       json_str = json.write(sanitized)
       callback = self.request.get('callback')
       if re.match("^[_a-z]([_a-z0-9])*$", callback, re.IGNORECASE):
@@ -262,13 +260,13 @@ class RequestHandler(webapp2.RequestHandler):
       self.response.out.write(json_str)
       return
     if self.is_yaml():
-      sanitized = sanitize(self.response_dict(), urlize)
+      sanitized = sanitize(self.response_dict(), self.urlize)
       yaml_str = yaml.safe_dump(sanitized, default_flow_style=False)
       self.response.headers['Content-Type'] = "text/plain; charset=UTF-8"
       self.response.out.write(yaml_str)
       return
     if self.is_xml():
-      sanitized = sanitize(self.response_dict(), urlize)
+      sanitized = sanitize(self.response_dict(), self.urlize)
       xml_str = to_xml(value=sanitized, root="response")
       self.response.headers['Content-Type'] = "%s; charset=UTF-8" % MIME_XML
       self.response.out.write(xml_str)
