@@ -126,7 +126,7 @@ class RequestHandler(webapp2.RequestHandler):
   
   def accepts(self, mime_type):
     """Returns true if this requests accepts the given MIME type"""
-    accept = self.request.headers['Accept']
+    accept = self.request.headers.get('Accept')
     if accept:
       return accept == mime_type
   
