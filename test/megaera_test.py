@@ -2,7 +2,7 @@ import unittest
 import types
 
 import megaera
-from megaera import RequestHandler
+from megaera import RequestHandler, set_jinja2_env
 
 from google.appengine.ext.webapp import Request, Response
 from google.appengine.api import apiproxy_stub_map
@@ -13,6 +13,8 @@ class MockJinja:
     self.path = path
     self.template = MockTemplate()
     return self.template
+
+jinja2 = set_jinja2_env(MockJinja())
 
 class MockTemplate:
   def render(self, **kwargs):
@@ -27,7 +29,6 @@ def mock_handler(file='handlers/mock.py', request='/mock', **response):
   handler = RequestHandler.with_page(mock_page(file))()
   handler.initialize(Request.blank(request), Response())
   handler.response_dict(**response)
-  handler.jinja = MockJinja()
   return handler
 
 
@@ -83,14 +84,14 @@ class TestMegaera(unittest.TestCase):
     handler = mock_handler(file='handlers/foo/bar.py')
     handler.file_exists = lambda self: True
     handler.render(None)
-    self.assertEquals(handler.jinja.path, 'foo/bar.html')
+    self.assertEquals(jinja2.path, 'foo/bar.html')
   
   def test_atom_render(self):
     handler = mock_handler(file='handlers/foo/bar.py', request='/?atom')
     handler.file_exists = lambda self: True
     handler.render(None, 'atom')
     self.assertTrue(handler.is_atom())
-    self.assertEquals(handler.jinja.path, 'foo/bar.atom')
+    self.assertEquals(jinja2.path, 'foo/bar.atom')
   
   def test_cache(self):
     handler = mock_handler()

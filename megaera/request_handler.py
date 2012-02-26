@@ -30,10 +30,18 @@ MIME_JSON = 'application/json'
 MIME_XML  = 'application/xml'
 MIME_ATOM = 'application/atom+xml'
 
-JINJA2_ENV = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_BASE))
+__JINJA2_ENV__ = None
+
+def set_jinja2_env(jinja2):
+  global __JINJA2_ENV__
+  __JINJA2_ENV__ = jinja2
+  return get_jinja2_env()
 
 def get_jinja2_env():
-  return JINJA2_ENV
+  global __JINJA2_ENV__
+  if not __JINJA2_ENV__:
+    __JINJA2_ENV__ = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_BASE))
+  return __JINJA2_ENV__
 
 class RequestHandler(webapp2.RequestHandler):
   
@@ -275,7 +283,7 @@ class RequestHandler(webapp2.RequestHandler):
           handler=self,
           is_dev=env.is_dev()
         )
-        template = JINJA2_ENV.get_template(path)
+        template = get_jinja2_env().get_template(path)
         rendered = template.render(**self.response_dict())
         self.response.out.write(rendered)
       except jinja2.TemplateError, error:
