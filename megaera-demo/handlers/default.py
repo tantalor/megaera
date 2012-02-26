@@ -9,4 +9,4 @@ def get(handler, response):
   if name == 'error':
     raise Exception('generic error')
   response.messages.hello = "hello %s" % name
-  response.something = 'http://%s/something%s' % (handler.host(), handler.extension())
+  response.something = handler.urlize('/something')
