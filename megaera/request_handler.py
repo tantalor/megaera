@@ -95,7 +95,6 @@ class RequestHandler(webapp2.RequestHandler):
     # render the template
     if self.is_atom():
       # for atom
-      self.response.headers['Content-Type'] = "%s; charset=UTF-8" % MIME_ATOM
       self.render(path, 'atom')
     else:
       # for html
@@ -283,6 +282,9 @@ class RequestHandler(webapp2.RequestHandler):
         )
         template = get_jinja2_env().get_template(path)
         rendered = template.render(**self.response_dict())
+        if self.is_atom() and self.get_status() == 200:
+          # for atom
+          self.response.headers['Content-Type'] = "%s; charset=UTF-8" % MIME_ATOM
         self.response.out.write(rendered)
       except jinja2.TemplateError, error:
         self.response.headers['Content-Type'] = 'text/plain'
@@ -298,10 +300,8 @@ class RequestHandler(webapp2.RequestHandler):
       self.response.headers['Content-Type'] = 'text/plain'
       self.response.out.write("%s %s" % (self.get_status(), 'not found'))
     else:
-      self.response.headers['Content-Type'] = 'text/plain'
-      message = "Template not found: %s" % path
-      logging.critical(message)
-      self.response.out.write(message)
+      logging.critical("Template not found: %s" % path)
+      self.render(self.not_found())
   
   def file_exists(self, path):
     return os.path.exists(path)
