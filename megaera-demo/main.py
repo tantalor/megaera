@@ -9,4 +9,5 @@ jinja2_env.filters['bold'] = lambda s: "<b>%s</b>" % s
 
 application = WSGIApplication([
   RequestHandler.path_with_page('/', 'handlers.default'),
+  RequestHandler.path_with_page('/something', 'handlers.something'),
 ], debug=True)
